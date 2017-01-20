@@ -9,6 +9,9 @@ public class Player : NetworkBehaviour
 	// Use this for initialization
 	void Start()
 	{
+		if (!isLocalPlayer)
+			return;
+
 		GameManager.Instance().CmdAddPlayer(gameObject);
 	}
 	
@@ -20,6 +23,9 @@ public class Player : NetworkBehaviour
 
 	void OnGUI()
 	{
+		if (!isLocalPlayer)
+			return;
+
 		GUI.Box(new Rect(0, 0, Screen.width, Screen.height), "I'm player " + m_playerNum);
 	}
 	

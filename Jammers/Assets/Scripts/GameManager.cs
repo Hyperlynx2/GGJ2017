@@ -8,7 +8,7 @@ public class GameManager : NetworkBehaviour
 	private static GameManager s_instance = null;
 
 	private IList<Player> m_playerList;
-
+	
 	private int m_nextPlayerNum;
 
 	public class Exception : System.Exception
