@@ -15,9 +15,14 @@ public class Player : NetworkBehaviour
 	// Update is called once per frame
 	void Update()
 	{
-	
+
 	}
 
+	void OnGUI()
+	{
+		GUI.Box(new Rect(0, 0, Screen.width, Screen.height), "I'm player " + m_playerNum);
+	}
+	
 	//message come in from the server.
 	[ClientRpc]
 	public void RpcReceiveMessage(string message)
