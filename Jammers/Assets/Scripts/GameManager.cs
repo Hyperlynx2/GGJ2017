@@ -1,8 +1,9 @@
 ﻿using UnityEngine;
-using System.Collections;
+using UnityEngine.Networking;
+using System.Collections.Generic;
 
 /*Other classes should get the GameManager by calling GameManager::instance()*/
-public class GameManager : Networking.NetworkBehaviour
+public class GameManager : NetworkBehaviour
 {
 	private static GameManager s_instance = null;
 
@@ -12,7 +13,7 @@ public class GameManager : Networking.NetworkBehaviour
 
 	public class Exception : System.Exception
 	{
-		public Exception(string message) :base(Message) {}
+		public Exception(string message) :base(message) {}
 	}
 
 	public static GameManager instance()
@@ -34,7 +35,7 @@ public class GameManager : Networking.NetworkBehaviour
 	// Use this for initialization
 	void Start ()
 	{
-		m_playerList = new ArrayList<Player> ();
+		m_playerList = new List<Player> ();
 	}
 	
 	// Update is called once per frame
@@ -44,22 +45,22 @@ public class GameManager : Networking.NetworkBehaviour
 	}
 
 	[Command]
-	int newPlayerNum()
+	public int newPlayerNum()
 	{
 		return m_nextPlayerNum++;
 	}
 
 	[Command]
-	void addPlayer(Player player)
+	public void addPlayer(Player player)
 	{
 		m_playerList.Add(player);
 	}
 
 	[Command]
-	void sendMessageTo(int playerNum, string message)
+	public void sendMessageTo(int playerNum, string message)
 	{
 		Player recipient = null;
-		for(int i = 0; recipient == null && i < m_playerList.size(); i++)
+		for(int i = 0; recipient == null && i < m_playerList.Count; i++)
 		{
 			if(m_playerList[i].getPlayerNumber() == playerNum)
 				recipient = m_playerList[i];

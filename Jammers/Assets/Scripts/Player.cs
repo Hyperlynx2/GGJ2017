@@ -1,17 +1,16 @@
 ﻿using UnityEngine;
+using UnityEngine.Networking;
 using System.Collections;
 
-public class Player : Networking.NetworkBehavior
+public class Player : NetworkBehaviour
 {
-	//TODO: LHF: player number. probably needs to be assigned by the server.
-
 	private int m_playerNum;
 
 	// Use this for initialization
 	void Start ()
 	{
-		m_playerNum = GameManager::instance().newPlayerNum();
-		GameManager::instance ().addPlayer(this);
+		m_playerNum = GameManager.instance().newPlayerNum();
+		GameManager.instance ().addPlayer(this);
 	}
 	
 	// Update is called once per frame
@@ -24,7 +23,7 @@ public class Player : Networking.NetworkBehavior
 	[ClientRpc]
 	public void receiveMessage(string message)
 	{
-		GUI.Label(Rect (0, 0, 100, 100), message);
+		GUI.Label(new Rect (0.0, 0.0, 100.0, 100.0), message);
 	}
 
 	[ClientRpc]
