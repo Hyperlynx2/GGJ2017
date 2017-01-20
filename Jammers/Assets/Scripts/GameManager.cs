@@ -16,7 +16,7 @@ public class GameManager : NetworkBehaviour
 		public Exception(string message) :base(message) {}
 	}
 
-	public static GameManager instance()
+	public static GameManager Instance()
 	{
 		if (s_instance == null)
 			throw new Exception("GameManager hasn't been instantiated yet. It needs to be attached as a component!");
@@ -43,31 +43,31 @@ public class GameManager : NetworkBehaviour
 	{
 	
 	}
-
+	
 	[Command]
-	public int newPlayerNum()
+	public void CmdAddPlayer(GameObject playerObject)
 	{
-		return m_nextPlayerNum++;
-	}
+		Player player = playerObject.GetComponent<Player>();
 
-	[Command]
-	public void addPlayer(Player player)
-	{
+		if (player == null)
+			throw new Exception ("Expected a Player here and din't get one!");
+
+		player.RpcSetPlayerNumber(m_nextPlayerNum++);
 		m_playerList.Add(player);
 	}
 
 	[Command]
-	public void sendMessageTo(int playerNum, string message)
+	public void CmdSendMessageTo(int playerNum, string message)
 	{
 		Player recipient = null;
 		for(int i = 0; recipient == null && i < m_playerList.Count; i++)
 		{
-			if(m_playerList[i].getPlayerNumber() == playerNum)
+			if(m_playerList[i].GetPlayerNumber() == playerNum)
 				recipient = m_playerList[i];
 		}
 
 		if(recipient != null)
-			recipient.receiveMessage(message);
+			recipient.RpcReceiveMessage(message);
 	}
 
 }
