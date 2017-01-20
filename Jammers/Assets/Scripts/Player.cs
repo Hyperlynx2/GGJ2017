@@ -4,6 +4,7 @@ using System.Collections;
 
 public class Player : NetworkBehaviour
 {
+	[SyncVar]
 	private int m_playerNum;
 
 	// Use this for initialization
@@ -12,7 +13,7 @@ public class Player : NetworkBehaviour
 		if (!isLocalPlayer)
 			return;
 
-		GameManager.Instance().CmdAddPlayer(gameObject);
+		CmdNewPlayer();
 	}
 	
 	// Update is called once per frame
@@ -28,22 +29,27 @@ public class Player : NetworkBehaviour
 
 		GUI.Box(new Rect(0, 0, Screen.width, Screen.height), "I'm player " + m_playerNum);
 	}
-	
-	//message come in from the server.
-	[ClientRpc]
-	public void RpcReceiveMessage(string message)
+
+	public void SetPlayerNum(int newNum)
 	{
-		GUI.Label(new Rect (0.0f, 0.0f, 100.0f, 100.0f), message);
+		m_playerNum = newNum;
 	}
 
-	[ClientRpc]
-	public void RpcSetPlayerNumber(int playerNumber)
+	[Command]
+	public void CmdNewPlayer()
 	{
-		m_playerNum = playerNumber;
+		Server.Instance().AddPlayer(this);
 	}
 
-	public int GetPlayerNumber()
+	[Command]
+	public void CmdMessageToPlayer(int playerNum, string message)
 	{
-		return m_playerNum;
+		/*LHF: Commands are only run on the copy of this player's object, on the server. It's not
+		 possible to directly invoke another player's Player object, so it's got to go through an
+		 intermediary.
+
+		 https://docs.unity3d.com/Manual/UNetActions.html*/
+
+		Server.Instance().SendMessageTo(playerNum, message);
 	}
 }

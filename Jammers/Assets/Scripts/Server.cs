@@ -3,9 +3,9 @@ using UnityEngine.Networking;
 using System.Collections.Generic;
 
 /*Other classes should get the GameManager by calling GameManager::instance()*/
-public class GameManager : NetworkBehaviour
+public class Server : NetworkBehaviour
 {
-	private static GameManager s_instance = null;
+	private static Server s_instance = null;
 
 	private IList<Player> m_playerList;
 	
@@ -16,7 +16,7 @@ public class GameManager : NetworkBehaviour
 		public Exception(string message) :base(message) {}
 	}
 
-	public static GameManager Instance()
+	public static Server Instance()
 	{
 		if (s_instance == null)
 			throw new Exception("GameManager hasn't been instantiated yet. It needs to be attached as a component!");
@@ -36,6 +36,7 @@ public class GameManager : NetworkBehaviour
 	void Start ()
 	{
 		m_playerList = new List<Player> ();
+		m_nextPlayerNum = 1;
 	}
 	
 	// Update is called once per frame
@@ -43,31 +44,22 @@ public class GameManager : NetworkBehaviour
 	{
 	
 	}
-	
-	[Command]
-	public void CmdAddPlayer(GameObject playerObject)
+
+	public void AddPlayer(Player newPlayer)
 	{
-		Player player = playerObject.GetComponent<Player>();
-
-		if (player == null)
-			throw new Exception ("Expected a Player here and din't get one!");
-
-		player.RpcSetPlayerNumber(m_nextPlayerNum++);
-		m_playerList.Add(player);
+		newPlayer.SetPlayerNum(NextPlayerNumber());
+		m_playerList.Add(newPlayer);
 	}
 
-	[Command]
-	public void CmdSendMessageTo(int playerNum, string message)
+	public int NextPlayerNumber()
 	{
-		Player recipient = null;
-		for(int i = 0; recipient == null && i < m_playerList.Count; i++)
-		{
-			if(m_playerList[i].GetPlayerNumber() == playerNum)
-				recipient = m_playerList[i];
-		}
+		return m_nextPlayerNum++;
+	}
 
-		if(recipient != null)
-			recipient.RpcReceiveMessage(message);
+	public void SendMessageTo(int playerNum, string message)
+	{
+		//LHF: ideally here we'd only actually send the message to the player with the right ID, but that's hard so screw it, leave it up to them.
+
 	}
 
 }
