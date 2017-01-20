@@ -18,6 +18,7 @@ public class Server : NetworkBehaviour
 
 	public static Server Instance()
 	{
+
 		if (s_instance == null)
 			throw new Exception("GameManager hasn't been instantiated yet. It needs to be attached as a component!");
 
@@ -26,6 +27,8 @@ public class Server : NetworkBehaviour
 
 	void Awake()
 	{
+		DontDestroyOnLoad(gameObject);
+		
 		if (s_instance != null)
 			throw new Exception ("GameManager has been used more than once.");
 
@@ -59,6 +62,16 @@ public class Server : NetworkBehaviour
 	public void SendMessageTo(int playerNum, string message)
 	{
 		//LHF: ideally here we'd only actually send the message to the player with the right ID, but that's hard so screw it, leave it up to them.
+
+		Player recipient = null;
+		for(int i = 0; recipient == null && i < m_playerList.Count; i++)
+		{
+			if(m_playerList[i].GetPlayerNum() == playerNum)
+				recipient = m_playerList[i];
+		}
+		
+		if(recipient != null)
+			recipient.RpcReceiveMessage(message);
 
 	}
 

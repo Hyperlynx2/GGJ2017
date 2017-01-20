@@ -7,6 +7,8 @@ public class Player : NetworkBehaviour
 	[SyncVar]
 	private int m_playerNum;
 
+	private string m_currentMessage;
+
 	// Use this for initialization
 	void Start()
 	{
@@ -14,11 +16,16 @@ public class Player : NetworkBehaviour
 			return;
 
 		CmdNewPlayer();
+
 	}
 	
 	// Update is called once per frame
 	void Update()
 	{
+		GameObject button = GameObject.Find("SayHelloButton");
+
+		if(button)
+			button.GetComponent<HelloButton>().SetCallBack(this);
 
 	}
 
@@ -27,12 +34,21 @@ public class Player : NetworkBehaviour
 		if (!isLocalPlayer)
 			return;
 
-		GUI.Box(new Rect(0, 0, Screen.width, Screen.height), "I'm player " + m_playerNum);
+		if(m_currentMessage == null)
+			GUI.Box(new Rect(0, 0, Screen.width, Screen.height), "I'm player " + m_playerNum);
+		else
+			GUI.Box(new Rect(0, 0, Screen.width, Screen.height), m_currentMessage);
+
 	}
 
 	public void SetPlayerNum(int newNum)
 	{
 		m_playerNum = newNum;
+	}
+
+	public int GetPlayerNum()
+	{
+		return m_playerNum;
 	}
 
 	[Command]
@@ -50,6 +66,15 @@ public class Player : NetworkBehaviour
 
 		 https://docs.unity3d.com/Manual/UNetActions.html*/
 
+		print("CmdMessageToPlayer");
+
 		Server.Instance().SendMessageTo(playerNum, message);
+	}
+
+	[ClientRpc]
+	public void RpcReceiveMessage(string message)
+	{
+		print ("RpcReceiveMessage");
+		m_currentMessage = message;
 	}
 }
