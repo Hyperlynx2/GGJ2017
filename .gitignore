@@ -1,0 +1,6 @@
+/Jammers/Library
+/Jammers/Temp
+*.csproj
+*.sln
+*.userprefs
+/Jammers/out
