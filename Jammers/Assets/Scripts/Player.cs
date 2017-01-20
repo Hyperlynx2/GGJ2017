@@ -7,27 +7,31 @@ public class Player : NetworkBehaviour
 	private int m_playerNum;
 
 	// Use this for initialization
-	void Start ()
+	void Start()
 	{
-		m_playerNum = GameManager.instance().newPlayerNum();
-		GameManager.instance ().addPlayer(this);
+		GameManager.Instance().CmdAddPlayer(gameObject);
 	}
 	
 	// Update is called once per frame
-	void Update ()
+	void Update()
 	{
 	
 	}
 
 	//message come in from the server.
 	[ClientRpc]
-	public void receiveMessage(string message)
+	public void RpcReceiveMessage(string message)
 	{
-		GUI.Label(new Rect (0.0, 0.0, 100.0, 100.0), message);
+		GUI.Label(new Rect (0.0f, 0.0f, 100.0f, 100.0f), message);
 	}
 
 	[ClientRpc]
-	public int getPlayerNumber()
+	public void RpcSetPlayerNumber(int playerNumber)
+	{
+		m_playerNum = playerNumber;
+	}
+
+	public int GetPlayerNumber()
 	{
 		return m_playerNum;
 	}
