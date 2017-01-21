@@ -1,10 +1,18 @@
 ﻿using UnityEngine;
 using UnityEngine.Networking;
 using System.Collections;
+using System.Collections.Generic;
 
 public class Player : NetworkBehaviour
 {
 	private int m_playerNum;
+
+	public SyncListString m_hand;
+
+	public SyncListString m_candidates;
+
+	[SyncVar]
+	public string m_TargetCard;
 
 	// Use this for initialization
 	void Start()

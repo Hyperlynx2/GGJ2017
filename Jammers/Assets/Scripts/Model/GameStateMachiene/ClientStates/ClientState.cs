@@ -19,13 +19,14 @@ public abstract class ClientState : NetworkBehaviour
 
 	public Action m_OnExitEvent;
 
+	//on server
 	public IEnumerator OnEnter()
 	{
-		//run client code 
-		EnterClient ();
 
-		m_OnEnterEvent ();
+			EnterServer ();
 
+		RpcServerToClientOnEnter ();
+	
 		//wait for client code to finish
 		yield return new WaitForSeconds (m_onEnterDelay);
 	}
@@ -33,15 +34,44 @@ public abstract class ClientState : NetworkBehaviour
 	public IEnumerator OnExit()
 	{
 
-		//run client code 
-		ExitClient ();
+		//run server code
+		ExitServer ();
 
-		m_OnExitEvent ();
-		
+		//run client code
+		RpcServerToClientOnExit();
+
 		//wait for client code to finish
 		yield return new WaitForSeconds (m_onEnterDelay);
 	}
 
+	[ClientRpc]
+	protected void RpcServerToClientOnEnter()
+	{
+		EnterClient ();
+		m_OnEnterEvent ();
+	}
+
+
+	[ClientRpc]
+	protected void RpcServerToClientOnExit()
+	{
+		ExitClient ();
+		m_OnExitEvent ();
+	}
+
+	//called on server only
+	public virtual void EnterServer()
+	{
+
+	}
+
+	public virtual void ExitServer()
+	{
+
+	}
+
+
+	//called on client only 
 	public virtual void EnterClient()
 	{
 

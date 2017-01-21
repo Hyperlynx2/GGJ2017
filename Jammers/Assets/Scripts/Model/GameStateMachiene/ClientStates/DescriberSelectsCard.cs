@@ -1,27 +1,20 @@
 ﻿using UnityEngine;
 using System.Collections;
+using UnityEngine.Networking;
 
 public class DescriberSelectsCard : ClientState 
 {
-	//protected playerref
-	//public player 
-	//{
-	//	get
-	//	{
-	//		playerref = getcomponentinparent<player>();
-	//	}
-	//}
-
-	public void cmdSelectCard( int CardNumber)
+	 
+	[Command]
+	public void CmdSelectCard( int cardNumber)
 	{
-		//get player and set selected card to describe
 
-		//get cards from dealer 
-		//cards[] dealercards = Dealer.Instance().getcards();
+		m_player.m_TargetCard = m_player.m_candidates [cardNumber];
 
-
-		//set the player target card
-		//player.targetcard = dealercards[cardnumber]
+		//go to description write state
+		m_StateManager.ChangeStateSafe (InGameState.DESCRIBER_WRITE_DESCRIPTION);
 
 	}
+
+
 }
