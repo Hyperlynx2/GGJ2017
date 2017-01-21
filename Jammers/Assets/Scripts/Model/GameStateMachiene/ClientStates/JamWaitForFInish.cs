@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public class JamWaitForFInish : MonoBehaviour {
+public class JamWaitForFinish : MonoBehaviour {
 
 	// Use this for initialization
 	void Start () {

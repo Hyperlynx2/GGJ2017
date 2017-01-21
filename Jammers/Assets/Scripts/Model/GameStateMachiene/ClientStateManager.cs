@@ -116,7 +116,15 @@ public class ClientStateManager : NetworkBehaviour
 		return null;
 
 	}
-	
+
+	//link up all client states
+	void LinkClientStates()
+	{
+		foreach (ClientState state in m_screens) 
+		{
+			state.m_StateManager = this;
+		}
+	}
 
 	// Use this for initialization
 	void Start () 

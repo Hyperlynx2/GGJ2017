@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public class WaitForPlayersToWriteDescription : MonoBehaviour {
+public class WaitForDescriberToWriteDescription : MonoBehaviour {
 
 	// Use this for initialization
 	void Start () {
