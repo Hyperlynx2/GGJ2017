@@ -32,6 +32,11 @@ public class Dealer : MonoBehaviour
 		player.m_playerNum = m_nextAvailablePlayerNum++;
 	}
 
+	public Player GetCurrentPlayer()
+	{
+		return m_players[m_currentPlayerNum];
+	}
+
 	/*Signal to the dealer that you've made your move and are ready for the next turn.
 
 	called by the server code of the Player gameObject (which is the state machine).
@@ -93,7 +98,6 @@ public class Dealer : MonoBehaviour
 	//false if waiting for players to join
 	bool m_gameIsRunning;
 
-	private int m_startingPlayerNum;
 	private int m_currentPlayerNum;
 
 	//the list of strings the describer gets to pick from.
@@ -122,7 +126,6 @@ public class Dealer : MonoBehaviour
 		m_players[0].m_role = Player.Role.DESCRIBER;
 		//player 1's turn to act.
 		m_currentPlayerNum = 0;
-		m_startingPlayerNum = 0;
 		m_players[m_players.Count - 1].m_role = Player.Role.GUESSER;
 
 		//the players in the middle are jammers
@@ -197,8 +200,25 @@ public class Dealer : MonoBehaviour
 				winner = m_players[p];
 		}
 
-		if(winner != null)
+		if(winner == null)
 		{
+			//next round!
+
+			//TODO: shuffle roles here!
+
+			/*for(int p = m_players.Count; p > 0; p--)
+			{
+				m_players[p%m_players.Count].m_role = //nah, sleep time.
+			}*/
+
+			//deal new round
+			StartRound();
+
+		}
+		else
+		{
+			//victory!
+
 			m_gameIsRunning = false;
 
 			winner.DoVictoryState();
