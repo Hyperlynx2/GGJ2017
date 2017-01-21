@@ -18,12 +18,13 @@ public class WriteDescription  : ClientState
 
 	public int m_maxDescriptionLength;
 
-	public IEnumerator OnEnter()
+	public List<string> m_possibleDescriptions;
+
+	public void OnEnter()
 	{
 		//reset valid description array
-		m_validDescription = new bool{false,false,false,false};
+		m_validDescription =  new bool[]{false,false,false,false};
 
-		yield return null;
 	}
 	
 	public void cmdSetHand( IList<string> hand)
@@ -36,6 +37,26 @@ public class WriteDescription  : ClientState
 		
 		//set the player target card
 		//player.hand = dealercards[cardnumber]
+
+		//clear the hand list
+		//foreach (string description in m_player.hand) 
+		//{
+		//	description = "";
+
+		//}
+
+		//check if passed hand passes validation
+		bool passesValidation = true;
+
+		foreach (string description in hand) 
+		{
+			if(ValidateDescription(description) == false)
+			{
+				return;
+			}
+		}
+
+		//set the player hand
 		
 	}
 
@@ -53,20 +74,16 @@ public class WriteDescription  : ClientState
 			return false;
 		}
 
-		//check if too long
-
 		//get cards from dealer 
 		//cards[] candidates = Dealer.Instance().getcandidates();
 
-		IList<string> candidateList;
-
-
-
+		//get from player
+		IList<string> candidateList = null;
 
 		//loop through all the dealer cards 
-
 		foreach (string candidate in candidateList) 
 		{
+			//check if candidate is in message 
 			if(description.Contains(candidate))
 			{
 				return false;
@@ -77,4 +94,32 @@ public class WriteDescription  : ClientState
 		return true;
 	}
 
+	public void UpdateDescription(string description, int index)
+	{
+		m_possibleDescriptions [index] = description;
+
+		for (int i = 0; i <  m_possibleDescriptions.Count; i++) 
+		{
+			m_validDescription[i] = ValidateDescription(m_possibleDescriptions[i]);
+		}
+	}
+
+	public bool AreDescriptionsValid()
+	{
+		foreach (bool isValid in m_validDescription) 
+		{
+			if(isValid == false)
+			{
+				return false;
+			}
+		}
+
+		return true;
+	}
+
+	public void SubmitDescriptions()
+	{
+		cmdSetHand (m_possibleDescriptions);
+
+	}
 }

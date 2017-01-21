@@ -7,6 +7,8 @@ public abstract class ClientState : NetworkBehaviour
 {
 	public ClientStateManager m_StateManager;
 
+	public Player m_player;
+
 	public InGameState m_targetGameState;
 
 	public float m_onEnterDelay;
