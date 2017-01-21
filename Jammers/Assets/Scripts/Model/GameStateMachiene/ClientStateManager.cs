@@ -20,6 +20,10 @@ public class ClientStateManager : NetworkBehaviour
 	
 	public bool ChangeState(InGameState newGameState)
 	{
+		if (isLocalPlayer) {
+			return false;
+		}
+
 		if(m_changingState || newGameState == m_clientGameState )
 		{
 			return false;
@@ -32,6 +36,10 @@ public class ClientStateManager : NetworkBehaviour
 	
 	public void ChangeStateSafe(InGameState newGameState)
 	{
+		if (isLocalPlayer) {
+			return;
+		}
+
 		if(m_stateChangeQue == null )
 		{
 			m_stateChangeQue = new List<InGameState>();
@@ -64,17 +72,17 @@ public class ClientStateManager : NetworkBehaviour
 		//get new state
 		ClientState newState = GetState (gameState);
 		
-		Debug.Log("States Fetched");
+		//Debug.Log("States Fetched");
 		
 		//transittion from old state
 		yield return StartCoroutine( currentState.OnExit());
 		
-		Debug.Log("Exited state");
+		//Debug.Log("Exited state");
 		
 		//transittion into new state
 		yield return StartCoroutine(newState.OnEnter());
 		
-		Debug.Log("entered state");
+		//Debug.Log("entered state");
 		
 		m_clientGameState = gameState;
 		
@@ -155,6 +163,10 @@ public class ClientStateManager : NetworkBehaviour
 	// Update is called once per frame
 	void Update () 
 	{
-		ManageSafeStateChange ();
+		if (!isLocalPlayer) 
+		{
+			ManageSafeStateChange ();
+
+		}
 	}
 }

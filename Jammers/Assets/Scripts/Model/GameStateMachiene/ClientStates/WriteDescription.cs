@@ -1,6 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
+using UnityEngine.Networking;
 
 public class WriteDescription  : ClientState 
 {
@@ -18,7 +19,7 @@ public class WriteDescription  : ClientState
 
 	public int m_maxDescriptionLength;
 
-	public List<string> m_possibleDescriptions;
+	public string[] m_possibleDescriptions;
 
 	public void OnEnter()
 	{
@@ -26,24 +27,10 @@ public class WriteDescription  : ClientState
 		m_validDescription =  new bool[]{false,false,false,false};
 
 	}
-	
-	public void cmdSetHand( IList<string> hand)
+
+	[Command]
+	public void CmdSetHand( string[] hand)
 	{
-		//get player and set selected card to describe
-		
-		//get cards from dealer 
-		//cards[] dealercards = Dealer.Instance().getcards();
-		
-		
-		//set the player target card
-		//player.hand = dealercards[cardnumber]
-
-		//clear the hand list
-		//foreach (string description in m_player.hand) 
-		//{
-		//	description = "";
-
-		//}
 
 		//check if passed hand passes validation
 		bool passesValidation = true;
@@ -52,11 +39,16 @@ public class WriteDescription  : ClientState
 		{
 			if(ValidateDescription(description) == false)
 			{
+				//exit if not valid
 				return;
 			}
 		}
 
 		//set the player hand
+		for (int i = 0; i < m_player.m_hand.Count; i++) 
+		{
+			m_player.m_hand [i] = hand [i];
+		}
 		
 	}
 
@@ -74,14 +66,8 @@ public class WriteDescription  : ClientState
 			return false;
 		}
 
-		//get cards from dealer 
-		//cards[] candidates = Dealer.Instance().getcandidates();
-
-		//get from player
-		IList<string> candidateList = null;
-
 		//loop through all the dealer cards 
-		foreach (string candidate in candidateList) 
+		foreach (string candidate in m_player.m_candidates) 
 		{
 			//check if candidate is in message 
 			if(description.Contains(candidate))
@@ -94,11 +80,24 @@ public class WriteDescription  : ClientState
 		return true;
 	}
 
+	public bool ReadyForNextState()
+	{
+		foreach (string description in m_player.m_hand) 
+		{
+			if (description != null && description.Length == 0) 
+			{
+				return false;
+			}
+		}
+
+		return true;
+	}
+
 	public void UpdateDescription(string description, int index)
 	{
 		m_possibleDescriptions [index] = description;
 
-		for (int i = 0; i <  m_possibleDescriptions.Count; i++) 
+		for (int i = 0; i <  m_possibleDescriptions.Length; i++) 
 		{
 			m_validDescription[i] = ValidateDescription(m_possibleDescriptions[i]);
 		}
@@ -117,9 +116,10 @@ public class WriteDescription  : ClientState
 		return true;
 	}
 
+
 	public void SubmitDescriptions()
 	{
-		cmdSetHand (m_possibleDescriptions);
+		CmdSetHand (m_possibleDescriptions);
 
 	}
 }

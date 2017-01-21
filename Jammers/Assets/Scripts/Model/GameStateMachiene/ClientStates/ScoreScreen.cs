@@ -1,15 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public class ScoreScreen : MonoBehaviour {
-
-	// Use this for initialization
-	void Start () {
+public class ScoreScreen : ClientState 
+{
 	
-	}
-	
-	// Update is called once per frame
-	void Update () {
-	
-	}
 }
