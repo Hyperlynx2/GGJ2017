@@ -1,8 +1,9 @@
 ﻿using UnityEngine;
 using System.Collections.Generic;
 using System.Collections;
+using UnityEngine.Networking;
 
-public class ClientStateManager : MonoBehaviour 
+public class ClientStateManager : NetworkBehaviour
 {
 	
 	public static ClientStateManager s_gameStateManager = null;
@@ -97,21 +98,46 @@ public class ClientStateManager : MonoBehaviour
 		Debug.Log("no state found ");
 		return null;
 	}
+
+	public T GetState<T>() where T : class
+	{
+		foreach( ClientState gameScreen in m_screens)
+		{
+			if(gameScreen is  T )
+			{
+				Debug.Log("returning state");
+				
+				return gameScreen as T;
+			}
+		}
+		
+		//throw new Exception("state does not exist");
+		Debug.Log("no state found ");
+		return null;
+
+	}
 	
-	
-	
+
 	// Use this for initialization
 	void Start () 
 	{
+		//dont set static if running on server
+		if (!isLocalPlayer) 
+		{
+			return;
+		}
+
+		//if game is running on client 
+
 		if (s_gameStateManager != null && s_gameStateManager != this) 
 		{
 			Destroy(this.gameObject);
 		}
-		
+
 		DontDestroyOnLoad (this.gameObject);
-		
+
 		s_gameStateManager = this;
-		
+
 	}
 	
 	// Update is called once per frame
