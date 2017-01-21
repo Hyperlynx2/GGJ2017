@@ -9,13 +9,27 @@ public class Dealer : MonoBehaviour
 	////////
 	//public
 	////////
-	 
+	public int numPlayersRequired = 4; 
+	public int scoreToWin = 10;
+
 	public static Dealer Instance()
 	{
 		if(s_instance == null)
 			throw new Exception("Dealer has not been attached to any GameObject!");
 
 		return s_instance;
+	}
+
+	//register this player with the dealer
+	public void AddPlayer(GameObject playerObj)
+	{
+		Player player = playerObj.GetComponent<Player>();
+
+		if(player == null)
+			throw new Exception("Not a player!");
+
+		m_players.Add(player);
+		player.SetPlayerNum(m_nextAvailablePlayerNum++);
 	}
 
 	/*Signal to the dealer that you've made your move and are ready for the next turn.
@@ -29,7 +43,12 @@ public class Dealer : MonoBehaviour
 			m_readyPlayers.Add(player);
 		} 
 
-		if(m_readyPlayers.Count == m_players.Count)
+		if(m_readyPlayers.Count == numPlayersRequired
+		&& !m_gameIsRunning)
+		{
+			StartGame();
+		}
+		else if(m_gameIsRunning && m_readyPlayers.Count == m_players.Count)
 		{
 			m_readyPlayers.Clear();
 
@@ -60,14 +79,19 @@ public class Dealer : MonoBehaviour
 	}
 
 
-
 	/////////
 	//private
 	/////////
 	private static Dealer s_instance = null;
 
+	//this is for allocating to connecting players.
+	private int m_nextAvailablePlayerNum = 0;
+
 	private IList<Player> m_players;
 	private IList<Player> m_readyPlayers;
+
+	//false if waiting for players to join
+	bool m_gameIsRunning;
 
 	private int m_startingPlayerNum;
 	private int m_currentPlayerNum;
@@ -85,23 +109,13 @@ public class Dealer : MonoBehaviour
 
 	// Use this for initialization
 	void Start()
-	{
-		m_candidates = GenerateCandidates();
-
+	{	
 		m_players = new List<Player>();
-		foreach(Player player in GameObject.FindObjectsOfType(typeof(Player)))
-		{
-			m_players.Add(player);
+	}
 
-			player.SetCandidates(m_candidates);
-		}
-
-		if (m_players.Count < 3)
-			throw new Exception("Cannot play with less than three players.");
-
-		if(m_candidates.Count < m_players.Count - 1)
-			throw new Exception("Not enough candidate words for all the players that need them.");
-
+	//from scratch!
+	void StartGame()
+	{
 		m_readyPlayers.Clear();
 
 		//totally fresh start, so new roles for all players.
@@ -117,29 +131,83 @@ public class Dealer : MonoBehaviour
 			m_players[p].SetRole(Player.Role.JAMMER);
 		}
 
-		//give target words to the players that need them
-		{
-			//can't just allocate the targets in the same order as the players know them...
-			List<string> shuffled = new List<string>(m_candidates);
+		StartRound();
+	}
 
-			int c = 0;
-			foreach(Player player in m_players)
+	//at start of a round (whether it's the game start or not)
+	void StartRound()
+	{
+		m_candidates = GenerateCandidates();
+
+		//can't just allocate the targets in the same order as the players know them...
+		List<string> shuffled = new List<string>(m_candidates);
+
+		int c = 0;
+		foreach(Player player in m_players)
+		{
+			player.SetCandidates(m_candidates);
+
+			//the person guessing doesn't have a target.
+			if(player.GetRole() != Player.Role.GUESSER )
 			{
-				//the person guessing doesn't have a target.
-				if(player.GetRole() != Player.Role.GUESSER )
-				{
-					player.SetTarget(shuffled[c]);
-					c++;
-				}
+				player.SetTarget(shuffled[c]);
+				c++;
 			}
 		}
-
 	}
 
 	/*check the guesser's guess against each player's target. invoke victory/loss callback on*/
-	void DoScores()
+	private void DoScores()
 	{
-		
+		Player guesser = FindPlayer(Player.Role.GUESSER);
+
+		bool foundScorer = false;
+		for(int p = 0; !foundScorer && p < m_players.Count; p++)
+		{
+			Player player = m_players[p];
+
+			if(player != guesser)
+			{
+				if(guesser.GetGuess() == player.GetTarget())
+				{
+					foundScorer = true;
+
+					player.SetScore(player.GetScore + 1);
+
+					if(player.GetRole() == Player.Role.JAMMER)
+					{
+						//bonus point!
+						player.SetScore(player.GetScore() + 1);
+					}
+					else
+					{
+						//teamwork point!
+						guesser.SetScore(guesser.GetScore() + 1);
+					}
+				}
+			}		
+		}
+
+		//see if anyone won
+		Player winner = null;
+		for(int p = 0; winner == null && p < m_players.Count; p++)
+		{
+			if(m_players[p].GetScore() >= scoreToWin)
+				winner = m_players[p];
+		}
+
+		if(winner != null)
+		{
+			m_gameIsRunning = false;
+
+			winner.DoVictoryState();
+
+			foreach (Player player in m_players)
+			{
+				if(player != winner)
+					player.DoLossState();
+			}
+		}
 	}
 	
 	// Update is called once per frame
@@ -148,11 +216,27 @@ public class Dealer : MonoBehaviour
 		
 	}
 
+	private Player FindPlayer(Player.Role role)
+	{
+		Player result = null;
+
+		for(int p = 0; result == null && p < m_players; p++)
+		{
+			if(m_players[p].GetRole() == role)
+				result = m_players[p];
+		}
+
+		return result;
+	}
+
 	private IList<string> GenerateCandidates()
 	{
 		List<string> result = new List<string>();
 
 		//TODO: load up the list from the arrays.
+
+		if(result.Count < m_players.Count - 1)
+			throw new Exception("Not enough candidate words for all the players that need them.");
 
 		return result;
 	}
