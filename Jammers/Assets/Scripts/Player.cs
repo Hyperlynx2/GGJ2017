@@ -5,7 +5,9 @@ using System.Collections.Generic;
 
 public class Player : NetworkBehaviour
 {
-	private int m_playerNum;
+	public int m_handSize;
+
+	public int m_candidateSize;
 
 	public SyncListString m_hand;
 
@@ -14,38 +16,21 @@ public class Player : NetworkBehaviour
 	[SyncVar]
 	public string m_TargetCard;
 
-	// Use this for initialization
-	void Start()
+	public void Awake()
 	{
-		GameManager.Instance().CmdAddPlayer(gameObject);
-	}
-	
-	// Update is called once per frame
-	void Update()
-	{
+		//add 4 empty items 
+		if(!isLocalPlayer)
+		{
+			while(m_hand.Count < m_handSize)
+			{
+				m_hand.Add("");
+			}
 
-	}
-
-	void OnGUI()
-	{
-		GUI.Box(new Rect(0, 0, Screen.width, Screen.height), "I'm player " + m_playerNum);
-	}
-	
-	//message come in from the server.
-	[ClientRpc]
-	public void RpcReceiveMessage(string message)
-	{
-		GUI.Label(new Rect (0.0f, 0.0f, 100.0f, 100.0f), message);
+			while(m_hand.Count < m_candidateSize)
+			{
+				m_candidates.Add("");
+			}
+		}
 	}
 
-	[ClientRpc]
-	public void RpcSetPlayerNumber(int playerNumber)
-	{
-		m_playerNum = playerNumber;
-	}
-
-	public int GetPlayerNumber()
-	{
-		return m_playerNum;
-	}
 }

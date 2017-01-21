@@ -1,15 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public class GuesserGuess : MonoBehaviour {
-
-	// Use this for initialization
-	void Start () {
+public class GuesserGuess : ClientState 
+{
 	
-	}
-	
-	// Update is called once per frame
-	void Update () {
-	
-	}
 }

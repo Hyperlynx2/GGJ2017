@@ -4,7 +4,6 @@ using System.Collections;
 public enum InGameState
 {
 	ROUNDX,
-	DESCRIBER_SELECT_CARD,
 	DESCRIBER_WAIT_STATE,
 	GUESSER_DESCRIBER_WIN,
 	GUESSER_GUESS,

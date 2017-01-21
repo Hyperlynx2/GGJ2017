@@ -26,6 +26,10 @@ public class ClientStateManager : NetworkBehaviour
 		return s_gameStateManager;
 	}
 
+	[SerializeField]
+	[ButtonAttribute("FillList")]
+	protected bool m_button;
+
 	[SyncVar]
 	public InGameState m_clientGameState;
 	
@@ -34,7 +38,12 @@ public class ClientStateManager : NetworkBehaviour
 	public List<ClientState> m_screens;
 	
 	public List<InGameState> m_stateChangeQue;
-	
+
+	public void FillList()
+	{
+		m_screens = new List<ClientState>( GetComponentsInChildren<ClientState> ());
+	}
+
 	public bool ChangeState(InGameState newGameState)
 	{
 		if (isLocalPlayer) {
