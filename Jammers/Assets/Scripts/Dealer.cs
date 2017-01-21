@@ -3,9 +3,9 @@ using UnityEngine.Networking;
 using System.Collections.Generic;
 
 /*Other classes should get the GameManager by calling GameManager::instance()*/
-public class Server : NetworkBehaviour
+public class Dealer : NetworkBehaviour
 {
-	private static Server s_instance = null;
+	private static Dealer s_instance = null;
 
 	private IList<Player> m_playerList;
 	
@@ -16,7 +16,7 @@ public class Server : NetworkBehaviour
 		public Exception(string message) :base(message) {}
 	}
 
-	public static Server Instance()
+	public static Dealer Instance()
 	{
 
 		if (s_instance == null)

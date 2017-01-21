@@ -54,7 +54,7 @@ public class Player : NetworkBehaviour
 	[Command]
 	public void CmdNewPlayer()
 	{
-		Server.Instance().AddPlayer(this);
+		Dealer.Instance().AddPlayer(this);
 	}
 
 	[Command]
@@ -68,7 +68,7 @@ public class Player : NetworkBehaviour
 
 		print("CmdMessageToPlayer");
 
-		Server.Instance().SendMessageTo(playerNum, message);
+		Dealer.Instance().SendMessageTo(playerNum, message);
 	}
 
 	[ClientRpc]
