@@ -2,11 +2,14 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+/*TODO: this will not work! the Dealer object will exist in the inGame state before the game has started yet!*/
+
 public class Dealer : MonoBehaviour
 {
 	////////
 	//public
 	////////
+	 
 	public static Dealer Instance()
 	{
 		if(s_instance == null)
@@ -26,39 +29,38 @@ public class Dealer : MonoBehaviour
 			m_readyPlayers.Add(player);
 		} 
 
-
 		if(m_readyPlayers.Count == m_players.Count)
 		{
 			m_readyPlayers.Clear();
 
-			//who were we waiting for?
-			switch (m_state)
+			Player currentPlayer = m_players[m_currentPlayerNum];
+
+			if(currentPlayer.GetRole() == Player.Role.GUESSER)
 			{
-			case State.DESCRIBER:
-				DoJammer(m_describer.GetHand()); //TODO: why not just have a "pass hand to this player" method?
-
-				break;
-			case State.JAMMERS:
-				DoJammer(m_jammers[m_nextJammerNum].GetHand()); //DoJammer will increment m_nextJammerNum and if at the max switch state.
-				break;
-
+				DoScores();
 			}
+			else
+			{
+				int nextPlayerNum = (m_currentPlayerNum + 1) % m_players.Count;
+				Player nextPlayer = m_players[nextPlayerNum];
+				nextPlayer.SetHand(currentPlayer.GetHand());
 
-
-
-
-			//TODO: do this on all players if we've determined that they're all ready to change state.
-			player.gameObject.GetComponent<ClientStateManager>().ChangeState();
+				foreach(Player p in m_players)
+				{
+					p.DoNextState();
+				}
+			}
 		}
 
-
 	}
 
-	public class Exception : System.Exception
+	class Exception : System.Exception
 	{
-		Exception(string message) : base(message) {}
+		public Exception(string message) : base(message) {}
 	}
-		
+
+
+
 	/////////
 	//private
 	/////////
@@ -67,31 +69,11 @@ public class Dealer : MonoBehaviour
 	private IList<Player> m_players;
 	private IList<Player> m_readyPlayers;
 
-	private Player m_describer;
-	private Player m_guesser;
-	private IList<Player> m_jammers;
-	private int m_nextJammerNum;
-
-	private State m_state;
+	private int m_startingPlayerNum;
+	private int m_currentPlayerNum;
 
 	//the list of strings the describer gets to pick from.
 	private IList<string> m_candidates;
-
-	enum State
-	{
-		/*Pick the guesser, describer, candidate words, target words
-		wait for the describer to describe.*/
-		DESCRIBER,
-		/*wait for a jammer to mess with the message.
-		repeat this state for each jammer*/
-		JAMMERS,
-		//wait for the guesser to guess
-		GUESSER,
-		//update scores. if nobody has won, go back to DESCRIBER.
-		SCORE,
-		//sweet victory. wait for the scene to be destroyed (when it goes back to the OutOfGame state)
-		VICTORY
-	}
 
 	void Awake()
 	{
@@ -120,19 +102,19 @@ public class Dealer : MonoBehaviour
 		if(m_candidates.Count < m_players.Count - 1)
 			throw new Exception("Not enough candidate words for all the players that need them.");
 
-		m_readyPlayers = 0;
+		m_readyPlayers.Clear();
 
 		//totally fresh start, so new roles for all players.
 		m_players[0].SetRole(Player.Role.DESCRIBER);
-		m_describer = m_players[0];
+		//player 1's turn to act.
+		m_currentPlayerNum = 0;
+		m_startingPlayerNum = 0;
 		m_players[m_players.Count - 1].SetRole(Player.Role.GUESSER);
-		m_guesser = m_players[m_players.Count - 1];
 
 		//the players in the middle are jammers
 		for(int p = 1; p < m_players.Count - 1; p++)
 		{
 			m_players[p].SetRole(Player.Role.JAMMER);
-			m_jammers.Add(p);
 		}
 
 		//give target words to the players that need them
@@ -152,8 +134,12 @@ public class Dealer : MonoBehaviour
 			}
 		}
 
-		//wait for the describer.
-		m_state = State.DESCRIBER;
+	}
+
+	/*check the guesser's guess against each player's target. invoke victory/loss callback on*/
+	void DoScores()
+	{
+		
 	}
 	
 	// Update is called once per frame
@@ -172,7 +158,7 @@ public class Dealer : MonoBehaviour
 	}
 
 	//thanks to http://stackoverflow.com/questions/273313/randomize-a-listt
-	private static Random rng = new Random();  
+	private static System.Random rng = new System.Random();  
 
 	public static void Shuffle<T>(IList<T> list)  
 	{  
