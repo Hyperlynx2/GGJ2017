@@ -203,12 +203,14 @@ public class Dealer : MonoBehaviour
 		{
 			//next round!
 
-			//TODO: shuffle roles here!
+			Player.Role lastPlayerRole = m_players[m_players.Count - 1].m_role;
 
-			/*for(int p = m_players.Count; p > 0; p--)
+			for(int p = m_players.Count; p > 0; p--)
 			{
-				m_players[p%m_players.Count].m_role = //nah, sleep time.
-			}*/
+				m_players[p].m_role = m_players[p-1].m_role;
+			}
+
+			m_players[0].m_role = lastPlayerRole;
 
 			//deal new round
 			StartRound();
