@@ -1,8 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public class JamWaitForFinish : MonoBehaviour 
-{
+public class AnimateOnStateEnter : MonoBehaviour {
 
 	// Use this for initialization
 	void Start () {

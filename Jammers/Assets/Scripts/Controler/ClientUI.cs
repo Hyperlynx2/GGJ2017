@@ -7,11 +7,17 @@ public class ClientUI<T> : MonoBehaviour where T:class
 
 	
 	// Use this for initialization
-	void Start () 
+	public virtual void Start () 
 	{
-		TargetState = ClientStateManager.s_gameStateManager.GetState<T> ();
+		LinkToState ();
 
 	
 	}
 
+	public void LinkToState()
+	{
+		TargetState = ClientStateManager.s_gameStateManager.GetState<T> ();
+	}
+
 }
+

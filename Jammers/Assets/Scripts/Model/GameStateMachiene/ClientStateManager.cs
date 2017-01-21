@@ -5,9 +5,11 @@ using UnityEngine.Networking;
 
 public class ClientStateManager : NetworkBehaviour
 {
+	public Player m_player;
 	
 	public static ClientStateManager s_gameStateManager = null;
-	
+
+	[SyncVar]
 	public InGameState m_clientGameState;
 	
 	public bool m_changingState = false;
@@ -116,7 +118,17 @@ public class ClientStateManager : NetworkBehaviour
 		return null;
 
 	}
-	
+
+	//link up all client states
+	void LinkClientStates()
+	{
+		foreach (ClientState state in m_screens) 
+		{
+			state.m_StateManager = this;
+
+			state.m_player = m_player;
+		}
+	}
 
 	// Use this for initialization
 	void Start () 

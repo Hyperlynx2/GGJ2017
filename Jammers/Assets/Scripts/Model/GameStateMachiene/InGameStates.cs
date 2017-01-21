@@ -3,24 +3,19 @@ using System.Collections;
 
 public enum InGameState
 {
-	SPLASH_SCREEN,
-	CONNECT,
-	CONNECT_FAIL,
-	NEW_GAME,
-	IN_GAME,
-	NONE
+	ROUNDX,
+	DESCRIBER_SELECT_CARD,
+	DESCRIBER_WAIT_STATE,
+	GUESSER_DESCRIBER_WIN,
+	GUESSER_GUESS,
+	GUESSER_WAIT,
+	JAM_LOOSE,
+	JAM_MESSAGE,
+	JAM_WAIT_FOR_TURN,
+	JAM_WAIT_FOR_FINISH,
+	JAM_WIN,
+	SCORE_SCREEN,
+	WAIT_FOR_DESCRIBER_TO_WRITE_DESCRIPTION,
+	DESCRIBER_WRITE_DESCRIPTION
 }
 
-public class InGameStates : MonoBehaviour 
-{
-
-	// Use this for initialization
-	void Start () {
-	
-	}
-	
-	// Update is called once per frame
-	void Update () {
-	
-	}
-}
