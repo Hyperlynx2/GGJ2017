@@ -21,7 +21,7 @@ public class WriteDescription  : ClientState
 
 	public string[] m_possibleDescriptions;
 
-	public void OnEnter()
+	public override void EnterClient()
 	{
 		//reset valid description array
 		m_validDescription =  new bool[]{false,false,false,false};
@@ -32,9 +32,7 @@ public class WriteDescription  : ClientState
 	public void CmdSetHand( string[] hand)
 	{
 
-		//check if passed hand passes validation
-		bool passesValidation = true;
-
+		//check for validation
 		foreach (string description in hand) 
 		{
 			if(ValidateDescription(description) == false)
@@ -45,9 +43,9 @@ public class WriteDescription  : ClientState
 		}
 
 		//set the player hand
-		for (int i = 0; i < m_player.m_hand.Count; i++) 
+		for (int i = 0; i < m_player.GetHandList().Count; i++) 
 		{
-			m_player.m_hand [i] = hand [i];
+			m_player.GetHandList() [i] = hand [i];
 		}
 		
 	}
@@ -67,7 +65,7 @@ public class WriteDescription  : ClientState
 		}
 
 		//loop through all the dealer cards 
-		foreach (string candidate in m_player.m_candidates) 
+		foreach (string candidate in m_player.GetCandidateList()) 
 		{
 			//check if candidate is in message 
 			if(description.Contains(candidate))
@@ -82,7 +80,7 @@ public class WriteDescription  : ClientState
 
 	public bool ReadyForNextState()
 	{
-		foreach (string description in m_player.m_hand) 
+		foreach (string description in m_player.GetHandList()) 
 		{
 			if (description != null && description.Length == 0) 
 			{
