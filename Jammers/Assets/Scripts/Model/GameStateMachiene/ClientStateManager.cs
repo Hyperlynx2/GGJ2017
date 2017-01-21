@@ -31,7 +31,9 @@ public class ClientStateManager : NetworkBehaviour
 	protected bool m_button;
 
 	[SyncVar]
-	public InGameState m_clientGameState;
+	public InGameState m_clientGameState = InGameState.DEFAULT;
+
+	public InGameState m_startingState = InGameState.WAIT_FOR_PLAYERS;
 	
 	public bool m_changingState = false;
 	
@@ -91,23 +93,36 @@ public class ClientStateManager : NetworkBehaviour
 	public IEnumerator ChangeStateCoroutine(InGameState gameState)
 	{
 		m_changingState = true;
-		
-		//get old state 
-		ClientState currentState = GetState (m_clientGameState);
-		
-		//get new state
-		ClientState newState = GetState (gameState);
+
+		//game states
+		ClientState currentState = null;
+		ClientState newState = null;
+
+		if (m_clientGameState != InGameState.DEFAULT) 
+		{
+			GetState (m_clientGameState);
+		}
+
+		if (gameState != InGameState.DEFAULT) 
+		{
+			//get new state
+			newState = GetState (gameState);
+		}
 		
 		//Debug.Log("States Fetched");
-		
-		//transittion from old state
-		yield return StartCoroutine( currentState.OnExit());
+
+		if (currentState != null) {
+			//transittion from old state
+			yield return StartCoroutine (currentState.OnExit ());
+		}
 		
 		//Debug.Log("Exited state");
-		
-		//transittion into new state
-		yield return StartCoroutine(newState.OnEnter());
-		
+
+		if (newState != null) {
+			//transittion into new state
+			yield return StartCoroutine (newState.OnEnter ());
+		}
+
 		//Debug.Log("entered state");
 		
 		m_clientGameState = gameState;
@@ -191,6 +206,12 @@ public class ClientStateManager : NetworkBehaviour
 	{
 		if (!isLocalPlayer) 
 		{
+			//run default state change 
+			if (m_clientGameState == InGameState.DEFAULT) 
+			{
+				ChangeStateSafe (m_startingState);
+			}
+
 			ManageSafeStateChange ();
 
 		}

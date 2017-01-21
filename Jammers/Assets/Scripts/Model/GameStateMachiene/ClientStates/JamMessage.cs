@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using System.Collections;
+using System.Collections.Generic;
 
 public class JamMessage : ClientState
 {
@@ -21,9 +22,9 @@ public class JamMessage : ClientState
 			return;
 		}
 
-		m_player.m_hand [index] = description;
+		//set hand description
+		m_player.SetHandValue(index, description);
 
-		//m_done = true;
 
 		//tell server i am done
 
@@ -44,7 +45,7 @@ public class JamMessage : ClientState
 		}
 
 		//loop through all the dealer cards 
-		foreach (string candidate in m_player.m_candidates) 
+		foreach (string candidate in m_player.GetCandidateList()) 
 		{
 			//check if candidate is in message 
 			if(description.Contains(candidate))
