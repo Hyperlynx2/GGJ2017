@@ -275,8 +275,4 @@ public class Dealer : MonoBehaviour
 			list[n] = value;  
 		}  
 	}
-
-	///////////////////
-	//state transitions
-	///////////////////
 }
