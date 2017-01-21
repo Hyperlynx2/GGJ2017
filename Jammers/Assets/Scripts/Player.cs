@@ -120,7 +120,7 @@ public class Player : NetworkBehaviour
 		if(!stateMachine)
 			throw new UnityException("No state machine");
 
-		stateMachine.ChangeStateSafe(InGameState.JAM_LOSS); //TODO: clean up state names (one win/loss)
+		stateMachine.ChangeStateSafe(InGameState.JAM_LOOSE); //TODO: clean up state names (one win/loss)
 	}
 		
 	[SyncVar]
