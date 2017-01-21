@@ -95,13 +95,34 @@ public class Player : NetworkBehaviour
 
 
 
+
+
 	public void SetStringAtIndex(SyncListString stringList, int iIndex, string value)
 	{
 		stringList [iIndex] = value;
 		stringList.Dirty (iIndex);
 	}
 
+	public void DoVictoryState()
+	{
+		ClientStateManager stateMachine = gameObject.GetComponentInChildren<ClientStateManager>();
 
+		if(!stateMachine)
+			throw new UnityException("No state machine");
+
+		stateMachine.ChangeStateSafe(InGameState.JAM_WIN); //TODO: clean up state names (one win/loss)
+	}
+
+	public void DoLossState()
+	{
+		ClientStateManager stateMachine = gameObject.GetComponentInChildren<ClientStateManager>();
+
+		if(!stateMachine)
+			throw new UnityException("No state machine");
+
+		stateMachine.ChangeStateSafe(InGameState.JAM_LOSS); //TODO: clean up state names (one win/loss)
+	}
+		
 	[SyncVar]
 	public string m_targetCard;
 

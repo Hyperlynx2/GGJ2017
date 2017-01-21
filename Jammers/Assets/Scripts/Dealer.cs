@@ -83,7 +83,6 @@ public class Dealer : MonoBehaviour
 		public Exception(string message) : base(message) {}
 	}
 
-
 	/////////
 	//private
 	/////////
