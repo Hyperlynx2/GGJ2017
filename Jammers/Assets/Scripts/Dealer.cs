@@ -22,12 +22,12 @@ public class Dealer : MonoBehaviour
 	public void PlayerReady(Player player)
 	{
 		//TODO: do this on all playeres if we've determined that they're all ready to change state.
-		player.gameObject.GetComponent<ClientStateManager>().ChangeState();
+		//player.gameObject.GetComponent<ClientStateManager>().ChangeState();
 	}
 
 	public class Exception : System.Exception
 	{
-		Exception(string message) : base(message) {}
+		public Exception(string message) : base(message) {}
 	}
 		
 	/////////
