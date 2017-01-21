@@ -16,6 +16,15 @@ public class Dealer : NetworkBehaviour
 		public Exception(string message) :base(message) {}
 	}
 
+	public void PickCandidateList()
+	{
+		//TODO: select from the dictionary
+	}
+		
+	public IList<string> GetCandidateList()
+	{
+	}
+
 	public static Dealer Instance()
 	{
 
