@@ -29,7 +29,7 @@ public class Dealer : MonoBehaviour
 			throw new Exception("Not a player!");
 
 		m_players.Add(player);
-		player.SetPlayerNum(m_nextAvailablePlayerNum++);
+		player.m_playerNum = m_nextAvailablePlayerNum++;
 	}
 
 	/*Signal to the dealer that you've made your move and are ready for the next turn.
@@ -54,7 +54,7 @@ public class Dealer : MonoBehaviour
 
 			Player currentPlayer = m_players[m_currentPlayerNum];
 
-			if(currentPlayer.GetRole() == Player.Role.GUESSER)
+			if(currentPlayer.m_role == Player.Role.GUESSER)
 			{
 				DoScores();
 			}
@@ -62,7 +62,7 @@ public class Dealer : MonoBehaviour
 			{
 				int nextPlayerNum = (m_currentPlayerNum + 1) % m_players.Count;
 				Player nextPlayer = m_players[nextPlayerNum];
-				nextPlayer.SetHand(currentPlayer.GetHand());
+				nextPlayer.SetHandList(currentPlayer.GetHandList());
 
 				foreach(Player p in m_players)
 				{
@@ -119,16 +119,16 @@ public class Dealer : MonoBehaviour
 		m_readyPlayers.Clear();
 
 		//totally fresh start, so new roles for all players.
-		m_players[0].SetRole(Player.Role.DESCRIBER);
+		m_players[0].m_role = Player.Role.DESCRIBER;
 		//player 1's turn to act.
 		m_currentPlayerNum = 0;
 		m_startingPlayerNum = 0;
-		m_players[m_players.Count - 1].SetRole(Player.Role.GUESSER);
+		m_players[m_players.Count - 1].m_role = Player.Role.GUESSER;
 
 		//the players in the middle are jammers
 		for(int p = 1; p < m_players.Count - 1; p++)
 		{
-			m_players[p].SetRole(Player.Role.JAMMER);
+			m_players[p].m_role = Player.Role.JAMMER;
 		}
 
 		StartRound();
@@ -145,12 +145,13 @@ public class Dealer : MonoBehaviour
 		int c = 0;
 		foreach(Player player in m_players)
 		{
-			player.SetCandidates(m_candidates);
+			player.SetCandidateList(m_candidates);
 
 			//the person guessing doesn't have a target.
-			if(player.GetRole() != Player.Role.GUESSER )
+			if(player.m_role != Player.Role.GUESSER )
 			{
-				player.SetTarget(shuffled[c]);
+				//player.SetTarget(shuffled[c]);
+				player.m_targetCard = shuffled[c];
 				c++;
 			}
 		}
@@ -168,21 +169,21 @@ public class Dealer : MonoBehaviour
 
 			if(player != guesser)
 			{
-				if(guesser.GetGuess() == player.GetTarget())
+				if(guesser.m_guess == player.m_targetCard)
 				{
 					foundScorer = true;
 
-					player.SetScore(player.GetScore + 1);
+					player.m_score++;
 
-					if(player.GetRole() == Player.Role.JAMMER)
+					if(player.m_role == Player.Role.JAMMER)
 					{
 						//bonus point!
-						player.SetScore(player.GetScore() + 1);
+						player.m_score++;
 					}
 					else
 					{
 						//teamwork point!
-						guesser.SetScore(guesser.GetScore() + 1);
+						guesser.m_score++;
 					}
 				}
 			}		
@@ -192,7 +193,7 @@ public class Dealer : MonoBehaviour
 		Player winner = null;
 		for(int p = 0; winner == null && p < m_players.Count; p++)
 		{
-			if(m_players[p].GetScore() >= scoreToWin)
+			if(m_players[p].m_score >= scoreToWin)
 				winner = m_players[p];
 		}
 
@@ -220,9 +221,9 @@ public class Dealer : MonoBehaviour
 	{
 		Player result = null;
 
-		for(int p = 0; result == null && p < m_players; p++)
+		for(int p = 0; result == null && p < m_players.Count; p++)
 		{
-			if(m_players[p].GetRole() == role)
+			if(m_players[p].m_role == role)
 				result = m_players[p];
 		}
 

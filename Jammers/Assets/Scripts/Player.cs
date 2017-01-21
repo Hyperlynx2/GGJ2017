@@ -5,6 +5,13 @@ using System.Collections.Generic;
 
 public class Player : NetworkBehaviour
 {
+	public enum Role
+	{
+		DESCRIBER,
+		JAMMER,
+		GUESSER
+	}
+
 	protected static Player s_Instance;
 
 	public static Player Instance()
@@ -78,7 +85,7 @@ public class Player : NetworkBehaviour
 		return candidates;
 	}
 
-	public void SetCandidateList(List<string> newValues)
+	public void SetCandidateList(IList<string> newValues)
 	{
 		for (int i = 0; i < m_candidates.Count; i++) 
 		{
@@ -96,7 +103,13 @@ public class Player : NetworkBehaviour
 
 
 	[SyncVar]
-	public string m_TargetCard;
+	public string m_targetCard;
+
+	[SyncVar]
+	public string m_guess;
+
+	[SyncVar]
+	public int m_score;
 
 	public void Awake()
 	{
@@ -115,4 +128,10 @@ public class Player : NetworkBehaviour
 		}
 	}
 
+	[SyncVar]
+	public Role m_role;
+
+	//LHF: proooobably not ever going to go out of sync, but so what?
+	[SyncVar]
+	public int m_playerNum;
 }
