@@ -1,0 +1,17 @@
+/Users/IGDA/GGJ2017/Jammers/Temp/bin/Debug/UnityEngine.dll
+/Users/IGDA/GGJ2017/Jammers/Temp/bin/Debug/UnityEditor.dll
+/Users/IGDA/GGJ2017/Jammers/Temp/bin/Debug/UnityEngine.UI.dll
+/Users/IGDA/GGJ2017/Jammers/Temp/bin/Debug/UnityEngine.Networking.dll
+/Users/IGDA/GGJ2017/Jammers/Temp/bin/Debug/UnityEngine.PlaymodeTestsRunner.dll
+/Users/IGDA/GGJ2017/Jammers/Temp/bin/Debug/UnityEngine.Analytics.dll
+/Users/IGDA/GGJ2017/Jammers/Temp/bin/Debug/UnityEngine.HoloLens.dll
+/Users/IGDA/GGJ2017/Jammers/Temp/bin/Debug/UnityEngine.VR.dll
+/Users/IGDA/GGJ2017/Jammers/Temp/bin/Debug/Mono.Cecil.dll
+/Users/IGDA/GGJ2017/Jammers/Temp/bin/Debug/Unity.SerializationLogic.dll
+/Users/IGDA/GGJ2017/Jammers/Temp/bin/Debug/Unity.DataContract.dll
+/Users/IGDA/GGJ2017/Jammers/Temp/bin/Debug/ICSharpCode.NRefactory.dll
+/Users/IGDA/GGJ2017/Jammers/Temp/bin/Debug/Unity.UNetWeaver.dll
+/Users/IGDA/GGJ2017/Jammers/Temp/bin/Debug/Unity.UNetWeaver.dll.mdb
+/Users/IGDA/GGJ2017/Jammers/Temp/bin/Debug/Unity.CecilTools.dll
+/Users/IGDA/GGJ2017/Jammers/Temp/bin/Debug/Mono.Cecil.Pdb.dll
+/Users/IGDA/GGJ2017/Jammers/Temp/bin/Debug/Mono.Cecil.Mdb.dll

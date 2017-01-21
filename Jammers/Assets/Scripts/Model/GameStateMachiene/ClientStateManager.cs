@@ -9,6 +9,23 @@ public class ClientStateManager : NetworkBehaviour
 	
 	public static ClientStateManager s_gameStateManager = null;
 
+	public static ClientStateManager Instance()
+	{
+		if (s_gameStateManager == null) {
+			 ClientStateManager[] stateManagers = FindObjectsOfType<ClientStateManager> ();
+
+			foreach (ClientStateManager manager in stateManagers) {
+				if (manager.isLocalPlayer == true) {
+					s_gameStateManager = manager;
+
+					return s_gameStateManager;
+				}
+			}
+		}
+
+		return s_gameStateManager;
+	}
+
 	[SyncVar]
 	public InGameState m_clientGameState;
 	
