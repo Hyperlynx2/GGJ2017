@@ -4,6 +4,23 @@ using System.Collections.Generic;
 
 public class JamMessage : ClientState
 {
+
+	[SerializeField]
+	protected InGameState m_jammingFinishedState; 
+
+
+	public override InGameState NextGameState ()
+	{
+
+			if (Dealer.Instance ().GetCurrentPlayer () != m_player) 
+			{
+				return m_nonActiveJamerRole;
+			}
+
+
+		return base.NextGameState ();
+	}
+
 	//public bool m_done = false;
 
 	public int m_maxDescriptionLength;
@@ -27,6 +44,7 @@ public class JamMessage : ClientState
 
 
 		//tell server i am done
+		Dealer.Instance().PlayerReady(m_player);
 
 	}
 
@@ -57,4 +75,7 @@ public class JamMessage : ClientState
 
 		return true;
 	}
+
+
+
 }

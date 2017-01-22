@@ -4,5 +4,8 @@ using System.Collections;
 public class GuesserDescriberWin :ClientState
 {
 
-
+	public override void EnterServer ()
+	{
+		Dealer.Instance ().PlayerReady (m_player);
+	}
 }
