@@ -3,4 +3,7 @@
 *.csproj
 *.sln
 *.userprefs
+*.meta
 /Jammers/out
+*.dll
+Jammers/obj
