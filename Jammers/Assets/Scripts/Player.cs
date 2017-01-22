@@ -134,6 +134,8 @@ public class Player : NetworkBehaviour
 
 	public void Awake()
 	{
+		m_hand = new SyncListString();
+		m_candidates = new SyncListString();
 		//add 4 empty items 
 		if(!isLocalPlayer)
 		{
