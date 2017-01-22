@@ -13,5 +13,7 @@ public class WaitForPlayers : ClientState
 
 
 		//fire off ready
+		Dealer.Instance ().PlayerReady (m_player);
+
 	}
 }
