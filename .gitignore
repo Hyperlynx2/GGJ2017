@@ -4,3 +4,5 @@
 *.sln
 *.userprefs
 /Jammers/out
+*.meta
+Assembly-CSharp-Editor.csproj.FilesWrittenAbsolute.txt
