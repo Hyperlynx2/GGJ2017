@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class LateConnectCaller : MonoBehaviour 
 {
-	public ILateConnectInterface[] m_lateConnectComponents;
+	public MonoBehaviour[] m_lateConnectComponents;
 
 	[SerializeField]
 	[ButtonAttribute("GetLateComponents")]
@@ -18,14 +18,24 @@ public class LateConnectCaller : MonoBehaviour
 
 	public void GetLateComponents()
 	{
-			m_lateConnectComponents = GetComponentsInChildren<ILateConnectInterface> (true);
+		ILateConnectInterface[] lateConnect = GetComponentsInChildren<ILateConnectInterface> (true);
+		m_lateConnectComponents = new MonoBehaviour[lateConnect.Length];
 
+		for (int i = 0; i < lateConnect.Length; i++) 
+		{
+			if (lateConnect [i] is MonoBehaviour) {
+				m_lateConnectComponents [i] = lateConnect [i] as MonoBehaviour;
+			}
+		}
 	}
 
 	//call connect on all kids
 	public void ConnectAllUIElements()
 	{
-		foreach(ILateConnectInterface lateComponent in m_lateConnectComponents)
+
+		ILateConnectInterface[] lateConnect = GetComponentsInChildren<ILateConnectInterface> (true);
+
+		foreach(ILateConnectInterface lateComponent in lateConnect)
 		{
 			if (lateComponent != null) {
 			

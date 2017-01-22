@@ -2,8 +2,12 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class UIFadeIn : MonoBehaviour
+public class UIFadeIn : MonoBehaviour , ILateConnectInterface
 {
+	public void ConnectToStates()
+	{
+		Connect ();
+	}
 
 	public InGameState m_TargetState;
 
@@ -18,8 +22,14 @@ public class UIFadeIn : MonoBehaviour
 
 	public void Awake()
 	{
+		Connect ();
+	}
+
+	public void Connect()
+	{
 		ClientState state =  ClientStateManager.Instance ().GetState (m_TargetState);
 
+		state.m_OnEnterEvent -= FadeIn;
 		state.m_OnEnterEvent += FadeIn;
 
 		fadeInRate = 1.0f / state.m_onEnterDelay;
