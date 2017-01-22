@@ -103,7 +103,7 @@ public class Fireball : MonoBehaviour
 				}
 			}
 			//set guesser target
-			_iTargets[0] == _iTargets[_iTargets.Length -1];
+			_iTargets[0] = _iTargets[_iTargets.Length -1];
 
 			_objRoundStart.SetActive(false);
 
@@ -112,7 +112,7 @@ public class Fireball : MonoBehaviour
 
 			for (int j = 0; j < _strClues.Length; j++) 
 			{
-				_txtDescriptionNumber.text = (j + 1);
+				_txtDescriptionNumber.text = (j + 1).ToString();
 
 				GameContinueButton.s_bContiune = false;
 
@@ -200,14 +200,14 @@ public class Fireball : MonoBehaviour
 		
 			for (int j = 0; j < _iTargets.Length; j++) 
 			{
-				if (_iTargets [j] == SelectCard.s_bSelected) 
+				if (_iTargets [j] == SelectCard.s_iSelectedCard) 
 				{
 					_iScores [j] += 1;
 					iwinner = j;
 				}
 			}
 
-			if (_iTargets [0] == SelectCard.s_bSelected) {
+			if (_iTargets [0] == SelectCard.s_iSelectedCard) {
 				_objGuesserWin.SetActive (true);
 				GameContinueButton.s_bContiune = false;
 
@@ -221,7 +221,7 @@ public class Fireball : MonoBehaviour
 			{
 				_objJamWin.SetActive (true);
 
-				_txtPlayerWinner.text = iwinner + 1;
+				_txtPlayerWinner.text = (iwinner + 1).ToString();
 
 				GameContinueButton.s_bContiune = false;
 
