@@ -37,6 +37,12 @@ public class Dealer : MonoBehaviour
 		return m_players[m_currentPlayerNum];
 	}
 
+	public Player GetNextPlayer()
+	{
+		int nextPlayer = (m_currentPlayerNum +1) % m_players.Count;
+		return m_players[nextPlayer];
+	}
+
 	/*Signal to the dealer that you've made your move and are ready for the next turn.
 
 	called by the server code of the Player gameObject (which is the state machine).
@@ -69,6 +75,7 @@ public class Dealer : MonoBehaviour
 				Player nextPlayer = m_players[nextPlayerNum];
 				nextPlayer.SetHandList(currentPlayer.GetHandList());
 
+				m_currentPlayerNum = nextPlayerNum;
 				foreach(Player p in m_players)
 				{
 					p.DoNextState();
