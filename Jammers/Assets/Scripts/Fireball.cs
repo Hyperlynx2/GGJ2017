@@ -5,6 +5,8 @@ using UnityEngine.UI;
 
 public class Fireball : MonoBehaviour 
 {
+	//public 
+
 	public static Fireball s_instance;
 
 	public int _iRounds;
@@ -25,7 +27,11 @@ public class Fireball : MonoBehaviour
 
 	public GameObject _objIntermission;
 
+	public Text _txtIntermittion;
+
 	public GameObject _objRoundStart;
+
+	public Text _txtRoundStart;
 
 	public GameObject _objWriteDescriptions;
 
@@ -60,6 +66,12 @@ public class Fireball : MonoBehaviour
 		
 	}
 
+	public int RoundOffset(int iround, int itarget)
+	{
+
+		return (itarget + iround) % _iTargets.Length;
+	}
+
 	public IEnumerator RunGame()
 	{
 		//
@@ -69,6 +81,8 @@ public class Fireball : MonoBehaviour
 		{
 			//display round start
 			_objRoundStart.SetActive(true);
+
+			_txtRoundStart.text = "Round " + (i + 1);
 
 			GameContinueButton.s_bContiune = false;
 
@@ -103,16 +117,32 @@ public class Fireball : MonoBehaviour
 				}
 			}
 			//set guesser target
-			_iTargets[0] == _iTargets[_iTargets.Length -1];
+			_iTargets[0] = _iTargets[_iTargets.Length -1];
 
 			_objRoundStart.SetActive(false);
+
+			_objIntermission.SetActive (true);
+
+			_txtIntermittion.text = "Player " + ( RoundOffset(i,0) + 1) + " Turn";
+
+			GameContinueButton.s_bContiune = false;
+
+			//wait for player to start
+			while (GameContinueButton.s_bContiune == false) 
+			{
+				yield return null;
+			}
+
+			_objIntermission.SetActive (false);
+
+
 
 			//display clue enter
 			_objWriteDescriptions.SetActive(true);
 
 			for (int j = 0; j < _strClues.Length; j++) 
 			{
-				_txtDescriptionNumber.text = (j + 1);
+				_txtDescriptionNumber.text = (j + 1).ToString();
 
 				GameContinueButton.s_bContiune = false;
 
@@ -135,6 +165,8 @@ public class Fireball : MonoBehaviour
 			{
 
 				_objIntermission.SetActive (true);
+
+				_txtIntermittion.text = "Player " + ( RoundOffset(i,j) + 1) + " Turn";
 
 				GameContinueButton.s_bContiune = false;
 
@@ -174,6 +206,8 @@ public class Fireball : MonoBehaviour
 
 			_objIntermission.SetActive (true);
 
+			_txtIntermittion.text = "Player " + ( RoundOffset(i, _iTargets.Length -1) + 1) + " Turn";
+
 			GameContinueButton.s_bContiune = false;
 
 			//wait for player to start
@@ -200,14 +234,14 @@ public class Fireball : MonoBehaviour
 		
 			for (int j = 0; j < _iTargets.Length; j++) 
 			{
-				if (_iTargets [j] == SelectCard.s_bSelected) 
+				if (_iTargets [j] == SelectCard.s_iSelectedCard) 
 				{
-					_iScores [j] += 1;
+					_iScores [RoundOffset(i,j)] += 1;
 					iwinner = j;
 				}
 			}
 
-			if (_iTargets [0] == SelectCard.s_bSelected) {
+			if (_iTargets [0] == SelectCard.s_iSelectedCard) {
 				_objGuesserWin.SetActive (true);
 				GameContinueButton.s_bContiune = false;
 
@@ -221,7 +255,7 @@ public class Fireball : MonoBehaviour
 			{
 				_objJamWin.SetActive (true);
 
-				_txtPlayerWinner.text = iwinner + 1;
+				_txtPlayerWinner.text = (RoundOffset(i,iwinner) + 1).ToString();
 
 				GameContinueButton.s_bContiune = false;
 
