@@ -5,6 +5,15 @@ using UnityEngine.Networking;
 
 public abstract class ClientState : NetworkBehaviour 
 {
+	[SerializeField]
+	protected InGameState m_guesserNextState;
+
+	[SerializeField]
+	protected InGameState m_jammerNextState;
+
+	[SerializeField]
+	protected InGameState m_describerNextState;
+
 	public ClientStateManager m_StateManager;
 
 	public Player m_player;
@@ -80,6 +89,27 @@ public abstract class ClientState : NetworkBehaviour
 	public virtual void ExitClient()
 	{
 
+	}
+
+	public virtual InGameState NextGameState()
+	{
+		switch (m_player.m_role) 
+		{
+
+		case Player.Role.DESCRIBER:
+			return m_describerNextState;
+			break;
+
+		case Player.Role.GUESSER:
+			return m_guesserNextState;
+			break;
+
+		case Player.Role.JAMMER:
+			return m_jammerNextState;
+			break;
+		}
+
+		return InGameState.DEFAULT;
 	}
 	
 }

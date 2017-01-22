@@ -46,6 +46,9 @@ public class WriteDescription  : ClientState
 		for (int i = 0; i < m_player.GetHandList().Count; i++) 
 		{
 			m_player.GetHandList() [i] = hand [i];
+
+			Dealer.Instance ().PlayerReady (m_player);
+		
 		}
 		
 	}

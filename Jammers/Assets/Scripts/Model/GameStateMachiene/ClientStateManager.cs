@@ -5,7 +5,17 @@ using UnityEngine.Networking;
 
 public class ClientStateManager : NetworkBehaviour
 {
-	public Player m_player;
+	protected Player m_player = null;
+
+	public Player GetPlayer()
+	{
+		if(m_player == null)
+		{
+			m_player = GetComponentInParent<Player> ();
+		}
+
+		return m_player;
+	}
 	
 	public static ClientStateManager s_gameStateManager = null;
 
@@ -46,21 +56,21 @@ public class ClientStateManager : NetworkBehaviour
 		m_screens = new List<ClientState>( GetComponentsInChildren<ClientState> ());
 	}
 
-	public bool ChangeState(InGameState newGameState)
-	{
-		if (isLocalPlayer) {
-			return false;
-		}
-
-		if(m_changingState || newGameState == m_clientGameState )
-		{
-			return false;
-		}
-		
-		this.StartCoroutine (ChangeStateCoroutine (newGameState));
-		
-		return true;
-	}
+	//public bool ChangeState(InGameState newGameState)
+	//{
+	//	if (isLocalPlayer) {
+	//		return false;
+	//	}
+	//
+	//	if(m_changingState || newGameState == m_clientGameState )
+	//	{
+	//		return false;
+	//	}
+	//	
+	//	this.StartCoroutine (ChangeStateCoroutine (newGameState));
+	//	
+	//	return true;
+	//}
 	
 	public void ChangeStateSafe(InGameState newGameState)
 	{
@@ -75,15 +85,28 @@ public class ClientStateManager : NetworkBehaviour
 		
 		m_stateChangeQue.Add (newGameState);
 	}
-	
+
+	public void DoNextState()
+	{
+		ClientState currentState = GetState (m_clientGameState);
+
+		InGameState nextState = currentState.NextGameState ();
+
+		ChangeStateSafe (nextState);
+	}
+
+
 	public void ManageSafeStateChange()
 	{
 		if(m_stateChangeQue != null && m_stateChangeQue.Count > 0 && m_changingState == false) 
 		{
 			
-			if(m_clientGameState != m_stateChangeQue[0])
+			if (m_clientGameState != m_stateChangeQue [0]) 
 			{
-				this.StartCoroutine( ChangeStateCoroutine(m_stateChangeQue[0]));
+				this.StartCoroutine (ChangeStateCoroutine (m_stateChangeQue [0]));
+			} else 
+			{
+				Dealer.Instance ().PlayerReady (GetPlayer());
 			}
 			
 			m_stateChangeQue.RemoveAt(0);
@@ -175,7 +198,7 @@ public class ClientStateManager : NetworkBehaviour
 		{
 			state.m_StateManager = this;
 
-			state.m_player = m_player;
+			state.m_player = GetPlayer();
 		}
 	}
 
