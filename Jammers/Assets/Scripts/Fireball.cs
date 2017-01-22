@@ -21,9 +21,10 @@ public class Fireball : MonoBehaviour
 
 	public int _iGuesser;
 
-	public string[] _strCandidates;
+	public string[] _strCandidates = new string[] { "one", "two", "three" };
 
-	public string _hand;
+
+    public string _hand;
 
 	public GameObject _objIntermission;
 
@@ -63,6 +64,8 @@ public class Fireball : MonoBehaviour
 	void Start () 
 	{
 		s_instance = this;
+
+        this.StartCoroutine(RunGame());
 	}
 	
 	// Update is called once per frame
@@ -80,7 +83,8 @@ public class Fireball : MonoBehaviour
 
 	public IEnumerator RunGame()
 	{
-		while (true) {
+		while (true)
+        {
 
 			//loop roiunds 
 			for (int i = 0; i < _iRounds; i++) {
@@ -102,16 +106,22 @@ public class Fireball : MonoBehaviour
 				//_iDescribeTarget = Random.Range(0,_strCandidates.Length);
 
 				//set random targets for everyone 
-				for (int j = 0; j < _iTargets.Length - 1; j++) {
+				for (int j = 0; j < _iTargets.Length - 1; j++)
+                {
 					bool bPasses = false;
 				
-					while (bPasses == false) {
+					for (int l = 0; l < 100; l++)
+                    {
 						bPasses = true;
 
 						_iTargets [j] = Random.Range (0, _iTargets.Length - 1);
 
-						for (int k = 0; k < _iTargets.Length; k++) {
-							if (_iTargets [j] == _iTargets [k - 1]) {
+						for (int k = 0; k < _iTargets.Length - 1; k++)
+                        {
+                            Debug.Log("j" + j + " k" + k);
+
+							if (_iTargets [j] == _iTargets [k])
+                            {
 								bPasses = false;
 							}
 						}
