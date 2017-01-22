@@ -37,6 +37,14 @@ public class Player : NetworkBehaviour
 
 	protected SyncListString m_hand;
 
+
+	public void DoNextState()
+	{
+		ClientStateManager stateMachine = GetComponentInChildren<ClientStateManager> ();
+
+		stateMachine.DoNextState();
+	}
+
 	public List<string> GetHandList()
 	{
 		List<string> hand = new List<string> (m_hand);

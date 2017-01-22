@@ -32,7 +32,7 @@ public class GuesserGuess : ClientState
 		{
 
 			//set target value 
-			m_player.m_TargetCard = m_player.GetCandidateList () [candidateIndex];
+			m_player.m_targetCard = m_player.GetCandidateList () [candidateIndex];
 		}
 
 		//throw player ready 

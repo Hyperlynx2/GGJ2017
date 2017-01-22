@@ -12,10 +12,10 @@ public class JamMessage : ClientState
 	public override InGameState NextGameState ()
 	{
 
-			if (Dealer.Instance ().GetCurrentPlayer () != m_player) 
-			{
-				return m_nonActiveJamerRole;
-			}
+		if (Dealer.Instance ().GetNextPlayer ().m_role != Player.Role.JAMMER) 
+		{
+			return m_jammingFinishedState;
+		}
 
 
 		return base.NextGameState ();

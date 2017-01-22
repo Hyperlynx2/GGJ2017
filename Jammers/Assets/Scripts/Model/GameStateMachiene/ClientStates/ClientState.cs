@@ -108,6 +108,8 @@ public abstract class ClientState : NetworkBehaviour
 			return m_jammerNextState;
 			break;
 		}
+
+		return InGameState.DEFAULT;
 	}
 	
 }

@@ -78,7 +78,7 @@ public class Dealer : MonoBehaviour
 				m_currentPlayerNum = nextPlayerNum;
 				foreach(Player p in m_players)
 				{
-					p.DoNextState();
+					p.DoNextState ();
 				}
 			}
 		}
